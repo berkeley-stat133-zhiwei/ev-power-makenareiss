@@ -8,27 +8,70 @@ format: typst
 ## **Part 0: libraries**
 
 ```{r}
-
+library(tidyverse)
+library(stringr)
+library(ggplot2)
 ```
 
 ## **Part 1:** **Defining Research Question**
 
-Chosen Question:
+Chosen Question: How has renewable energy use changed across U.S. states between 2021 and 2023?
 
 ## **Part 2: Data Preparation and Cleaning**
 
 ```{r}
+renew21 <- read_csv("data/renew-use-2021.csv")
+renew22 <- read_csv("data/renew-use-2022.csv")
+renew23 <- read_csv("data/renew-use-2023.csv")
+
+total21 <- read_csv("data/total-use-2021.csv")
+total22 <- read_csv("data/total-use-2022.csv")
+total23 <- read_csv("data/total-use-2023.csv")
+
+ev23 <- read_csv("data/ev-registrations-by-state-2023.csv")
+
+renew_all <- bind_rows(
+renew21 %>% mutate(year = 2021),
+renew22 %>% mutate(year = 2022),
+renew23 %>% mutate(year = 2023)
+)
+
+total_all <- bind_rows(
+total21 %>% mutate(year = 2021),
+total22 %>% mutate(year = 2022),
+total23 %>% mutate(year = 2023)
+)
+
+names(ev23)
+
+renew_all <- renew_all %>%
+  mutate(state = str_to_title(State))
+
+ev23 <- ev23 %>%
+  mutate(state = str_to_title(STATE))
 
 ```
 
 ## **Part 3: Joining / Pivoting Datasets for Analysis**
 
 ```{r}
+summary_data <- renew_all %>%
+  group_by(year) %>%
+  summarise(avg_use = mean(renew_all, na.rm = TRUE))
+
 
 ```
 
 ## **Part 4: Mapping Visualization**
 
 ```{r}
-
+ggplot(summary_data, aes(x = year, y = avg_use)) +
+  geom_line(color = "steelblue", size = 1.2) +
+  geom_point(size = 3, color = "darkblue") +
+  labs(
+    title = "Average Renewable Energy Use (2021–2023)",
+    x = "Year",
+    y = "Average Renewable Energy Use"
+  ) +
+  theme_minimal()
 ```
