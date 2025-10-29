@@ -43,13 +43,6 @@ total23 %>% mutate(year = 2023)
 )
 
 names(ev23)
-
-renew_all <- renew_all %>%
-  mutate(state = str_to_title(State))
-
-ev23 <- ev23 %>%
-  mutate(state = str_to_title(STATE))
-
 ```
 
 ## **Part 3: Joining / Pivoting Datasets for Analysis**
